@@ -1,7 +1,5 @@
 package com.giannini.common.config;
 
-import org.dom4j.Element;
-
 /**
  * 配置文件接口类
  * 
@@ -26,7 +24,7 @@ public interface Configuration {
      * 
      * @return 配置根节点
      */
-    Element getRootElement();
+    ElementNode getRootElement();
 
     /**
      * 载入配置参数

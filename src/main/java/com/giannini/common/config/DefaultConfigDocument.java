@@ -1,7 +1,5 @@
 package com.giannini.common.config;
 
-import org.dom4j.Element;
-
 /**
  * 缺省配置文件类
  * 
@@ -19,7 +17,7 @@ public class DefaultConfigDocument implements Configuration {
         return null;
     }
 
-    public Element getRootElement() {
+    public ElementNode getRootElement() {
         // TODO Auto-generated method stub
         return null;
     }
