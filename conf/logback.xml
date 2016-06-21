@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<property name="LOG_HOME" value="/Users/jiangningyu/Documents/workspace/gia-common/log"/>
+	
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<target>System.out</target>
+		<encoder>
+			<pattern>[%-5p]%d,[%c{0}], %m%n%rEx{3}</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>TRACE</level>
+		</filter>
+	</appender>
+
+	<!-- 文件Appender定义段 -->
+	
+	<!-- TOTAL 轮转LOG配置 -->
+	<appender name="TOTAL_DAILY"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder>
+			<pattern>[%-5p]%d,[%c{0}], %m%n%rEx{3}</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<fileNamePattern>${LOG_HOME}/total/total-%d{yyyy-MM-dd}.log.gz
+			</fileNamePattern>
+			
+			<!-- keep 10 days' worth of history -->
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+	</appender>
+
+	<!-- 测试LOG配置 -->
+	<appender name="TEST_LOG" class="ch.qos.logback.core.FileAppender">
+		<file>${LOG_HOME}/test.log</file>
+		<append>false</append>
+		<encoder>
+			<pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+		</encoder>
+	</appender> 
+	
+	<!-- 定义各级Logger -->
+	
+	<!-- 定义测试用的独立LOG输出 -->
+	<logger name="com.giannini.test.dom4j.Dom4jTest" level="TRACE"
+		additivity="false">
+		<appender-ref ref="TEST_LOG" />
+	</logger>
+	
+	<!-- 定义root Logger -->
+	<root level="INFO">
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="TOTAL_DAILY" />
+	</root>
+
+</configuration>
