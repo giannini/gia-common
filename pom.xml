@@ -3,4 +3,13 @@
   <groupId>com.giannini</groupId>
   <artifactId>common</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+
+	<dependencies>
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>1.6.1</version>
+		</dependency>
+	</dependencies>
+  
 </project>
