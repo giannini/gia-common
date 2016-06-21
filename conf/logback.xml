@@ -35,14 +35,14 @@
 		<file>${LOG_HOME}/test.log</file>
 		<append>false</append>
 		<encoder>
-			<pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+			<pattern>[%-5p]%d,[%c{0}], %m%n%rEx{3}</pattern>
 		</encoder>
 	</appender> 
 	
 	<!-- 定义各级Logger -->
 	
 	<!-- 定义测试用的独立LOG输出 -->
-	<logger name="com.giannini.test.dom4j.Dom4jTest" level="TRACE"
+	<logger name="com.giannini.test" level="TRACE"
 		additivity="false">
 		<appender-ref ref="TEST_LOG" />
 	</logger>
