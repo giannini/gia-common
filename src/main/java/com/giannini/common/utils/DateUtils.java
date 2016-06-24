@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 /**
  * date日期格式处理
@@ -78,6 +79,9 @@ public final class DateUtils {
 
     /**
      * 按照指定的格式解析字符串到Date类型
+     * <p>
+     * 参考jdk文档：http://docs.oracle.com/javase/7/docs/api/java/text/
+     * SimpleDateFormat.html
      * 
      * @param timeStr
      * @param format
@@ -93,7 +97,7 @@ public final class DateUtils {
     /**
      * 自动将指定的时间参数值(字符串类型)转换到毫秒单位时间值(long类型)
      * <p>
-     * 允许以下参数值中包含以下时间单位后缀
+     * 允许以下参数值中包含以下时间单位后缀(单个字符串只包含一个单位)
      * <ul>
      * <li>'d' 或 'D': 天
      * <li>'h' 或 'H': 小时
@@ -101,13 +105,56 @@ public final class DateUtils {
      * <li>'s' 或 'S': 秒
      * <li>'ms' 或 无单位后缀 : 毫秒
      * </ul>
+     * <p>
+     * 例如 15m 转换后 900000L
      * 
      * @param timeStr
      *            时间参数值(字符串类型)
-     * @return 毫秒单位时间值(long类型)
-     * @throws ClassCastException
-     *             非法的时间单位
+     * @return 毫秒单位时间值(long类型), 异常返回-1
      */
+    public static long strToMilliseconds(String timeStr) {
+        long ms = -1L;
+        if (timeStr == null || timeStr.trim().length() == 0) {
+            return ms;
+        }
+
+        // 获取单位，单位最长为2个字符(ms)，也可能没有
+        int unitIndex = timeStr.length() - 1;
+        String unit;
+        while (!Character.isDigit(timeStr.charAt(unitIndex))) {
+            unitIndex--;
+        }
+        if (unitIndex == (timeStr.length() - 1)) {
+            unit = "ms";
+        } else {
+            unit = timeStr.substring(unitIndex + 1).trim();
+        }
+
+        // 获取数值
+        Long value = Long.parseLong(timeStr.substring(0, unitIndex + 1).trim());
+        if (unit.equalsIgnoreCase("ms")) {
+            return value;
+        }
+
+        // 转换成毫秒数量级
+        switch (unit.charAt(0)) {
+            case 'd':
+            case 'D':
+                return TimeUnit.DAYS.toMillis(value);
+            case 'h':
+            case 'H':
+                return TimeUnit.HOURS.toMillis(value);
+            case 'm':
+            case 'M':
+                return TimeUnit.MINUTES.toMillis(value);
+            case 's':
+            case 'S':
+                return TimeUnit.MINUTES.toMillis(value);
+            default:
+                break;
+        }
+        return -1L;
+    }
 
     /**
      * 将指定的毫秒单位时间值(long类型)转换到带时间参数单位值(字符串类型)
