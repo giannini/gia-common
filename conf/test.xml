@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<server>
+		<!-- ============= 常用配置 ============= -->
+		<!-- 普通侦听端口 -->
+		<address-list>
+			<address>*:1080</address>
+		</address-list>
+		
+		<threads>32</threads>
+		
+		<test-list>
+			<test-el name="test1" pri="100" method="post" />
+			<test-el name="test2" pri="200" method="get" />
+			<test-el name="test3" method="use" />
+		</test-list>
+
+	    <ip-addresses>127.0.0.1, 10.120.100.0/24</ip-addresses>
+	    
+		<volume>
+			<id>1</id>
+			<name>com.gianinni.test</name>
+			<config>127.0.0.1:/home/gia/test/test.xml</config>
+	    </volume>
+
+	</server>  
+</root>
