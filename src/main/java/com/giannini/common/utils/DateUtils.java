@@ -172,20 +172,55 @@ public final class DateUtils {
      *            毫秒单位时间值(long类型)
      * @return 带时间参数单位值(字符串类型)
      */
+    public static String milliSecondToStr(long millis) {
+        if (millis < 0) {
+            return null;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        
+        // day
+        if (millis >= 24 * 60 * 60 * 1000) {
+            long days = TimeUnit.MILLISECONDS.toDays(millis);
+            sb.append(days).append("d");
+            millis -= days * 24 * 60 * 60 * 1000;
+        }
+
+        // hour
+        if (millis >= 60 * 60 * 1000) {
+            long hour = TimeUnit.MILLISECONDS.toHours(millis);
+            sb.append(hour).append("h");
+            millis -= hour * 60 * 60 * 1000;
+        }
+
+        // minutes
+        if (millis >= 60 * 1000) {
+            long minutes = TimeUnit.MILLISECONDS.toMinutes(millis);
+            sb.append(minutes).append("m");
+            millis -= minutes * 60 * 1000;
+        }
+
+        // second
+        if (millis > 1000) {
+            long second = TimeUnit.MILLISECONDS.toSeconds(millis);
+            sb.append(second).append("s");
+            millis -= second * 1000;
+        }
+
+        // ms
+        if (millis > 0) {
+            sb.append(millis).append("ms");
+        }
+        return sb.toString();
+    }
 
     /**
-     * 只支持以下格式的时区ID:
-     * <p>
-     * <ul>
-     * <li>"Sign Hours", 例如: "+8"
-     * <li>"GMT Sign Hours : Minutes", 例如: "GMT+08:00"
-     * <li>"GMT Sign Hours Minutes", 例如: "GMT+0800"
-     * <li>"GMT Sign Hours", 例如: "GMT+08"
-     * </ul>
+     * 时区解析
      * 
      * @param id
-     *            a string of the <a href="#CustomID">custom ID form</a>.
-     * @return 有效时区对象(null=无法识别的时区ID)
+     * @return
      */
-
+    public static final TimeZone tryParseTimeZone(String id) {
+        return null;
+    }
 }

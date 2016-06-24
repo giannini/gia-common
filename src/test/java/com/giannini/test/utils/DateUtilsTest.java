@@ -90,6 +90,16 @@ public class DateUtilsTest {
 
     @Test
     public void testMillisecondsToStr() {
-
+        // 2d4h30m55s:189055000
+        long val1 = 189055000L;
+        Assert.assertEquals("2d4h30m55s", DateUtils.milliSecondToStr(val1));
+        
+        // 35m20s200ms
+        long val2 = 2120200L;
+        Assert.assertEquals("35m20s200ms", DateUtils.milliSecondToStr(val2));
+        
+        //200ms
+        long val3 = 200L;
+        Assert.assertEquals("200ms", DateUtils.milliSecondToStr(val3));
     }
 }
