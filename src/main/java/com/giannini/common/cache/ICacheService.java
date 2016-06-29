@@ -10,16 +10,12 @@ import java.util.Date;
 public interface ICacheService {
 
     /**
-     * 缓存服务关闭接口
-     * <p>
-     * 将所有当前缓存的数据丢弃, 并关闭服务
-     * <p>
-     * 注意: 该接口应该只供Tools类来调用
+     * 关闭当前的缓存
      */
-    public void disposeAll();
+    public void dispose();
 
     /**
-     * 清除当前已经缓存的所有数据
+     * 清除当前缓存中的数据
      */
     public void clear();
 
@@ -51,7 +47,8 @@ public interface ICacheService {
     public boolean keyExists(Object key);
 
     /**
-     * 替换一个键值对, 该键值对不会过期
+     * 替换一个键值对, 该键值的过期时间根据cache的默认时间，如果没有指定就不会过期.<br>
+     * 替换后，过期时间会被更新
      * <p>
      * 只有当指定的键存在cache中时, 替换才会发生.
      * 
@@ -60,12 +57,11 @@ public interface ICacheService {
      * @param value
      *            值
      * @return object=原来被缓存的值; null=指定键不存在cache中
-     * @see #setIfAbsent(ICachedKey, Object)
      */
     public Object replace(Object key, Object value);
 
     /**
-     * 替换一个键值对, 并设定过期时间
+     * 替换一个键值对, 并设定过期时间.
      * <p>
      * 只有当指定的键存在cache中时, 替换才会发生.
      * 
@@ -74,13 +70,13 @@ public interface ICacheService {
      * @param value
      *            值
      * @param expiry
-     *            过期时间(null=默认过期时间)
+     *            过期时间(null=配置中的默认过期时间)
      * @return object=原来被缓存的值; null=指定键不存在cache中
      */
     public Object replace(Object key, Object value, Date expiry);
 
     /**
-     * 设置一个键值对, 该键值对不会过期
+     * 设置一个键值对, 该键值对的过期时间为配置中的默认时间
      * 
      * @param key
      *            键
@@ -111,13 +107,13 @@ public interface ICacheService {
      * @param value
      *            值
      * @param liveMillis
-     *            存活时间(单位:毫秒, null=默认过期时间)
+     *            存活时间(单位:毫秒, null=默认过期时间, 0=不会过期)
      * @return true=操作成功;false=操作失败
      */
     public boolean set(Object key, Object value, Long liveMillis);
 
     /**
-     * 设置一个键值对, 该键值对不会过期
+     * 设置一个键值对, 该键值对按配置默认时间过期
      * <p>
      * 只有当指定的键没有被cache缓存时, 设置才能成功
      * 
@@ -125,7 +121,7 @@ public interface ICacheService {
      *            键
      * @param value
      *            值
-     * @return object=已存在的值;null=设置操作成功
+     * @return object=已存在的value值;null=设置操作成功
      */
     public Object setIfAbsent(Object key, Object value);
 
@@ -140,7 +136,7 @@ public interface ICacheService {
      *            值
      * @param expiry
      *            过期时间(null=默认过期时间)
-     * @return object=已存在的值;null=设置操作成功
+     * @return object=已存在的value值;null=设置操作成功
      */
     public Object setIfAbsent(Object key, Object value, Date expiry);
 

@@ -3,7 +3,13 @@ package com.giannini.common.cache;
 import java.util.Date;
 
 import net.sf.ehcache.Cache;
+import net.sf.ehcache.Element;
 
+/**
+ * Ehcache缓存接口适配器(单个缓存)
+ * 
+ * @author giannini
+ */
 public class EhcacheAdapter implements ICacheService {
 
     /**
@@ -16,6 +22,11 @@ public class EhcacheAdapter implements ICacheService {
      */
     private Integer timeToLiveSeconds;
 
+    /**
+     * 缓存的闲置时间，单位：秒
+     */
+    private Integer timeToIdleSeconds;
+
     public EhcacheAdapter(Cache cache) {
         this.cache = cache;
         if (cache == null) {
@@ -27,66 +38,115 @@ public class EhcacheAdapter implements ICacheService {
         if (timeToLiveSeconds <= 0) {
             this.timeToLiveSeconds = Integer.MAX_VALUE;
         }
+
+        this.timeToIdleSeconds = (int) cache.getCacheConfiguration()
+                .getTimeToIdleSeconds();
+        if (timeToIdleSeconds <= 0) {
+            this.timeToIdleSeconds = Integer.MAX_VALUE;
+        }
     }
 
-    public void disposeAll() {
-        // TODO Auto-generated method stub
-
+    public void dispose() {
+        cache.getCacheManager().removeCache(cache.getName());
     }
 
     public void clear() {
-        // TODO Auto-generated method stub
-
+        cache.removeAll();
     }
 
     public boolean delete(Object key) {
-        // TODO Auto-generated method stub
-        return false;
+        return cache.remove(key);
     }
 
     public Object get(Object key) {
-        // TODO Auto-generated method stub
-        return null;
+        Element element = cache.get(key);
+        if (element == null || element.isExpired()) {
+            return null;
+        }
+        return element.getObjectValue();
     }
 
     public boolean keyExists(Object key) {
-        // TODO Auto-generated method stub
-        return false;
+        return cache.isKeyInCache(key);
     }
 
     public Object replace(Object key, Object value) {
-        // TODO Auto-generated method stub
-        return null;
+        Element element = new Element(key, value, timeToIdleSeconds,
+                timeToLiveSeconds);
+        return cache.replace(element);
     }
 
     public Object replace(Object key, Object value, Date expiry) {
-        // TODO Auto-generated method stub
-        return null;
+        Element element = null;
+        if (expiry == null) {
+            element = new Element(key, value, timeToIdleSeconds,
+                    timeToLiveSeconds);
+        } else {
+            int timeToLive = (int) (expiry.getTime()
+                    - System.currentTimeMillis())
+                    / 1000;
+            element = new Element(key, value, timeToIdleSeconds, timeToLive);
+        }
+
+        return cache.replace(element);
     }
 
     public boolean set(Object key, Object value) {
-        // TODO Auto-generated method stub
-        return false;
+        Element element = new Element(key, value, timeToIdleSeconds,
+                timeToLiveSeconds);
+        cache.put(element);
+        return true;
     }
 
     public boolean set(Object key, Object value, Date expiry) {
-        // TODO Auto-generated method stub
-        return false;
+        Element element = null;
+        if (expiry == null) {
+            element = new Element(key, value, timeToIdleSeconds,
+                    timeToLiveSeconds);
+        } else {
+            int timeToLive = (int) (expiry.getTime()
+                    - System.currentTimeMillis()) / 1000;
+            element = new Element(key, value, timeToIdleSeconds, timeToLive);
+        }
+
+        cache.put(element);
+        return true;
     }
 
     public boolean set(Object key, Object value, Long liveMillis) {
-        // TODO Auto-generated method stub
-        return false;
+        Element element = null;
+        if (liveMillis == null || liveMillis < 0) {
+            element = new Element(key, value, timeToIdleSeconds,
+                    timeToLiveSeconds);
+        } else {
+            element = new Element(key, value, timeToIdleSeconds,
+                    (int) (liveMillis / 1000));
+        }
+
+        cache.put(element);
+        return true;
     }
 
     public Object setIfAbsent(Object key, Object value) {
-        // TODO Auto-generated method stub
-        return null;
+        Element old = cache.putIfAbsent(
+                new Element(key, value, timeToIdleSeconds, timeToLiveSeconds));
+        return old == null ? null : old.getObjectValue();
     }
 
     public Object setIfAbsent(Object key, Object value, Date expiry) {
-        // TODO Auto-generated method stub
-        return null;
+        Element element = null;
+        if (expiry == null) {
+            element = new Element(key, value, timeToIdleSeconds,
+                    timeToLiveSeconds);
+        } else {
+            int timeToLive = (int) (expiry.getTime()
+                    - System.currentTimeMillis()) / 1000;
+            element = new Element(key, value, timeToIdleSeconds, timeToLive);
+        }
+
+        Element old = cache.putIfAbsent(element);
+
+        return old == null ? null : old.getObjectValue();
     }
 
 }
