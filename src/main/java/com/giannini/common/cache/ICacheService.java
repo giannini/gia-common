@@ -2,6 +2,11 @@ package com.giannini.common.cache;
 
 import java.util.Date;
 
+/**
+ * 缓存服务接口
+ * 
+ * @author giannini
+ */
 public interface ICacheService {
 
     /**
@@ -9,7 +14,7 @@ public interface ICacheService {
      * <p>
      * 将所有当前缓存的数据丢弃, 并关闭服务
      * <p>
-     * 注意: 该接口应该只供Helper类来调用
+     * 注意: 该接口应该只供Tools类来调用
      */
     public void disposeAll();
 

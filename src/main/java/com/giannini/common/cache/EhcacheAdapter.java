@@ -2,7 +2,32 @@ package com.giannini.common.cache;
 
 import java.util.Date;
 
+import net.sf.ehcache.Cache;
+
 public class EhcacheAdapter implements ICacheService {
+
+    /**
+     * ehcache实例对象
+     */
+    private final Cache cache;
+
+    /**
+     * 缓存存活秒数
+     */
+    private Integer timeToLiveSeconds;
+
+    public EhcacheAdapter(Cache cache) {
+        this.cache = cache;
+        if (cache == null) {
+            throw new NullPointerException("null cache");
+        }
+
+        this.timeToLiveSeconds = (int) cache.getCacheConfiguration()
+                .getTimeToLiveSeconds();
+        if (timeToLiveSeconds <= 0) {
+            this.timeToLiveSeconds = Integer.MAX_VALUE;
+        }
+    }
 
     public void disposeAll() {
         // TODO Auto-generated method stub
