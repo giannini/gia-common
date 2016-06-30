@@ -71,9 +71,9 @@ public class EhcacheAdapter implements ICacheService {
     }
 
     public Object replace(Object key, Object value) {
-        Element element = new Element(key, value, timeToIdleSeconds,
-                timeToLiveSeconds);
-        return cache.replace(element);
+        Element old = cache.replace(
+                new Element(key, value, timeToIdleSeconds, timeToLiveSeconds));
+        return old == null ? null : old.getObjectValue();
     }
 
     public Object replace(Object key, Object value, Date expiry) {
@@ -88,7 +88,9 @@ public class EhcacheAdapter implements ICacheService {
             element = new Element(key, value, timeToIdleSeconds, timeToLive);
         }
 
-        return cache.replace(element);
+        Element old = cache.replace(element);
+
+        return old == null ? null : old.getObjectValue();
     }
 
     public boolean set(Object key, Object value) {
@@ -147,6 +149,10 @@ public class EhcacheAdapter implements ICacheService {
         Element old = cache.putIfAbsent(element);
 
         return old == null ? null : old.getObjectValue();
+    }
+
+    public String getName() {
+        return this.cache.getName();
     }
 
 }

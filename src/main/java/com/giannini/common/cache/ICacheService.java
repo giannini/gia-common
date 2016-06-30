@@ -56,7 +56,7 @@ public interface ICacheService {
      *            键
      * @param value
      *            值
-     * @return object=原来被缓存的值; null=指定键不存在cache中
+     * @return object=原来被缓存的value值; null=指定键不存在cache中
      */
     public Object replace(Object key, Object value);
 
@@ -71,7 +71,7 @@ public interface ICacheService {
      *            值
      * @param expiry
      *            过期时间(null=配置中的默认过期时间)
-     * @return object=原来被缓存的值; null=指定键不存在cache中
+     * @return object=原来被缓存的value值; null=指定键不存在cache中
      */
     public Object replace(Object key, Object value, Date expiry);
 
@@ -139,5 +139,12 @@ public interface ICacheService {
      * @return object=已存在的value值;null=设置操作成功
      */
     public Object setIfAbsent(Object key, Object value, Date expiry);
+
+    /**
+     * 获取cache名
+     * 
+     * @return 本地缓存返回缓存名；远程缓存返回地址(ip:port)
+     */
+    public String getName();
 
 }

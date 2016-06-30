@@ -12,7 +12,7 @@ import net.sf.ehcache.config.Configuration;
  * 
  * @author giannini
  */
-public class EhcacheTools {
+public class EhcacheHelper {
 
     /**
      * 缓存管理器
@@ -81,6 +81,11 @@ public class EhcacheTools {
                     .getDefaultCacheConfiguration();
             cache = new Cache(cacheConf);
             ehcacheManger.addCache(cache);
+
+            // 以默认配置添加一个cache
+            // String cacheName = "default#" + System.currentTimeMillis();
+            // ehcacheManger.addCache(cacheName);
+            // cache = ehcacheManger.getCache(cacheName);
         } else {
             cache = ehcacheManger.getCache(cacheConfig.getName());
         }
