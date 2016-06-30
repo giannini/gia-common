@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ehcache-failsafe.xml -->
+<!-- 
+<ehcache> 
+  <diskStore path="java.io.tmpdir"/> 
+  <defaultCache 
+     maxEntriesLocalHeap="10000" 
+     eternal="false" 
+     timeToIdleSeconds="120" 
+     timeToLiveSeconds="120" 
+     maxEntriesLocalDisk="10000000" 
+     diskExpiryThreadIntervalSeconds="120" 
+     memoryStoreEvictionPolicy="LRU"> 
+     <persistence strategy="localTempSwap"/> 
+  </defaultCache> 
+</ehcache>
+ -->
+
+<!-- ehcache.xml. maxBytesLocalDisk可指定disk大小.  -->
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+   xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd"
+   maxBytesLocalDisk="500M">
+   <!-- disk满时的删除规则是按照LFU进行的，不可配置 -->
+    <diskStore path="/tmp/ehcache" />  
+   
+	<defaultCache maxElementsInMemory="1000"
+	eternal="false" timeToIdleSeconds="120" timeToLiveSeconds="120"
+	overflowToDisk="false" diskPersistent="false"
+	diskExpiryThreadIntervalSeconds="120" memoryStoreEvictionPolicy="LRU"/>
+	
+	<cache name="memoryCache" maxElementsInMemory="10000" eternal="false"
+	overflowToDisk="false" timeToIdleSeconds="120" timeToLiveSeconds="10"
+	transactionalMode="off" />
+	
+	<!-- LFU 最不常使用. maxBytesLocalHeap可指定cache大小. -->
+	<cache name="memoryCache2" maxBytesLocalHeap="50M" eternal="false"
+	overflowToDisk="true" memoryStoreEvictionPolicy="LFU"
+	timeToIdleSeconds="120" timeToLiveSeconds="120" transactionalMode="off" />
+	
+</ehcache>
