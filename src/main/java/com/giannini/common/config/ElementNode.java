@@ -268,6 +268,169 @@ public class ElementNode
         }
     }
 
+    /**
+     * 强制以Boolean类型返回指定的配置参数值
+     * <p>
+     * 如果存在多个相关配置参数, 则选择第一个配置参数值
+     * <p>
+     * 参数路径可以是配置节点名称, 或者是采用'.'分隔的嵌套参数节点路径
+     * 
+     * @param key
+     *            配置参数名路径
+     * @return 参数值
+     * @throws NullPointerException
+     *             指定的配置参数不存在
+     * @throws ClassCastException
+     *             转换参数值类型失败
+     */
+    public boolean getBoolean(String key) {
+        ElementNode node = this.getChild(key);
+        if (node == null) {
+            throw new NullPointerException(key + " is null");
+        } else if (node.hasChildren()) {
+            throw new ClassCastException(key + " no value.");
+        }
+
+        if (node.value instanceof Boolean) {
+            return ((Boolean) node.value).booleanValue();
+        }
+
+        return Boolean.parseBoolean(node.value.toString());
+    }
+
+    /**
+     * 根据参数路径返回boolean类型的值，如果指定的节点不存在或者未设置值，则返回默认值
+     * 
+     * @param key
+     * @param defaultValue
+     * @return
+     */
+    public boolean getBoolean(String key, boolean defaultValue) {
+        ElementNode node = this.getChild(key);
+        if (node == null) {
+            return defaultValue;
+        } else if (node.hasChildren()) {
+            throw new ClassCastException(key + " no value.");
+        } else if (node.value == null) {
+            return defaultValue;
+        }
+
+        if (node.value instanceof Boolean) {
+            return ((Boolean) node.value).booleanValue();
+        }
+
+        return Boolean.parseBoolean(node.value.toString());
+    }
+
+    /**
+     * 强制以int类型返回指定的配置参数值
+     * <p>
+     * 如果存在多个相关配置参数, 则选择第一个配置参数值
+     * <p>
+     * 参数路径可以是配置节点名称, 或者是采用'.'分隔的嵌套参数节点路径
+     * 
+     * @param key
+     *            配置参数名路径
+     * @return 参数值
+     * @throws NullPointerException
+     *             指定的配置参数不存在
+     * @throws ClassCastException
+     *             转换参数值类型失败
+     */
+    public int getInteger(String key) {
+        ElementNode node = this.getChild(key);
+        if (node == null) {
+            throw new NullPointerException(key + " is null");
+        } else if (node.hasChildren()) {
+            throw new ClassCastException(key + " no value.");
+        }
+
+        if (node.value instanceof Integer) {
+            return ((Integer) node.value).intValue();
+        }
+
+        return Integer.parseInt(node.value.toString());
+    }
+
+    /**
+     * 根据参数路径返回boolean类型的值，如果指定的节点不存在或者未设置值，则返回默认值
+     * 
+     * @param key
+     * @param defaultValue
+     * @return
+     */
+    public int getInteger(String key, int defaultValue) {
+        ElementNode node = this.getChild(key);
+        if (node == null) {
+            return defaultValue;
+        } else if (node.hasChildren()) {
+            throw new ClassCastException(key + " no value.");
+        } else if (node.value == null) {
+            return defaultValue;
+        }
+
+        if (node.value instanceof Integer) {
+            return ((Integer) node.value).intValue();
+        }
+
+        return Integer.parseInt(node.value.toString());
+    }
+
+    /**
+     * 强制以Long类型返回指定的配置参数值
+     * <p>
+     * 如果存在多个相关配置参数, 则选择第一个配置参数值
+     * <p>
+     * 参数路径可以是配置节点名称, 或者是采用'.'分隔的嵌套参数节点路径
+     * 
+     * @param key
+     *            配置参数名路径
+     * @return 参数值
+     * @throws NullPointerException
+     *             指定的配置参数不存在
+     * @throws ClassCastException
+     *             转换参数值类型失败
+     */
+    public Long getLong(String key) {
+        ElementNode node = this.getChild(key);
+        if (node == null) {
+            throw new NullPointerException(key + " is null");
+        } else if (node.hasChildren()) {
+            throw new ClassCastException(key + " no value.");
+        }
+
+        if (node.value instanceof Long) {
+            return ((Long) node.value).longValue();
+        }
+
+        return Long.parseLong(node.value.toString());
+    }
+
+    /**
+     * 根据参数路径返回Long类型的值，如果指定的节点不存在或者未设置值，则返回默认值
+     * 
+     * @param key
+     * @param defaultValue
+     * @return
+     */
+    public Long getLong(String key, Long defaultValue) {
+        ElementNode node = this.getChild(key);
+        if (node == null) {
+            return defaultValue;
+        } else if (node.hasChildren()) {
+            throw new ClassCastException(key + " no value.");
+        } else if (node.value == null) {
+            return defaultValue;
+        }
+
+        if (node.value instanceof Long) {
+            return ((Long) node.value).longValue();
+        }
+
+        return Long.parseLong(node.value.toString());
+        // return Integer.parseInt(node.value.toString());
+    }
+
     public Iterator<ElementNode> iterator() {
         return new InnerIterator();
     }
