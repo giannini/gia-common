@@ -1,17 +1,17 @@
 package com.giannini.test.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.giannini.common.config.Configuration;
-import com.giannini.common.config.ConfigurationHelper;
 import com.giannini.common.config.ElementNode;
+import com.giannini.common.config.XMLConfigDocument;
 
 public class ConfigTest {
 
-    private static final Logger logger = LoggerFactory
-            .getLogger(ConfigTest.class);
-
+    private static final String configFilePath = "test/test.xml";
+    
     private static final String CONF_ADDRESS_LIST_NODE = "server.address-list";
 
     private static final String CONF_VOLUME_NODE = "server.volume";
@@ -34,15 +34,33 @@ public class ConfigTest {
     private static final String CONF_VOLUME_CONFIG = CONF_VOLUME_NODE
             + ".config";
 
-    public static void main(String[] args) throws Exception {
-
-        String configPath = "test/test.xml";
-        Configuration configuration = ConfigurationHelper
-                .loadConfiguration(configPath);
-        // configuration.addWatcher(new ConfigWatcher());
-
-        loadFromConfigNode(configuration);
+    @Before
+    public void setEnv() {
+        // System.out.println(System.getProperty("user.dir"));
+        System.setProperty("CONF_HOME", System.getProperty("user.dir"));
     }
+
+    @Test
+    public void testXMLConfigDocument() throws Exception {
+
+        XMLConfigDocument doc = new XMLConfigDocument(configFilePath);
+        doc.load();
+        System.out.println("xml config doc load done.");
+        ElementNode root = doc.getRootElement();
+        Assert.assertNotNull(root);
+        Assert.assertEquals(32, root.getInteger(CONF_THREADS, 16));
+
+    }
+
+    // public static void main(String[] args) throws Exception {
+        //
+        // String configPath = "test/test.xml";
+        // Configuration configuration = ConfigurationHelper
+        // .loadConfiguration(configPath);
+        // // configuration.addWatcher(new ConfigWatcher());
+        //
+        // loadFromConfigNode(configuration);
+    // }
 
     private static void loadFromConfigNode(Configuration configuration) {
         ElementNode root = configuration.getRootElement();

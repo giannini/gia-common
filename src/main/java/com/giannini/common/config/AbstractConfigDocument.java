@@ -3,21 +3,12 @@ package com.giannini.common.config;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * 缺省配置文件类
  * 
  * @author giannini
  */
-public class DefaultConfigDocument implements Configuration {
-
-    /**
-     * 日志记录
-     */
-    private static final Logger logger = LoggerFactory
-            .getLogger(DefaultConfigDocument.class);
+public abstract class AbstractConfigDocument implements Configuration {
 
     /**
      * 系统属性名称,可配置conf默认路径
@@ -35,25 +26,15 @@ public class DefaultConfigDocument implements Configuration {
     private String confHome = DEFAULT_CONF_HOME;
 
     /**
-     * 配置的根节点
-     */
-    private volatile ElementNode rootNode = null;
-
-    /**
      * 配置的版本号
      */
     private volatile long version = System.currentTimeMillis();
 
     private final Set<ConfigWatcher> watcherSet = new HashSet<ConfigWatcher>();
 
-    public DefaultConfigDocument() {
+    public AbstractConfigDocument() {
         this.confHome = System.getProperty(PROPERTY_CONF_HOME,
                 DEFAULT_CONF_HOME);
-    }
-
-    public void load() throws Exception {
-        // TODO Auto-generated method stub
-
     }
 
     public long getVersion() {
@@ -62,10 +43,6 @@ public class DefaultConfigDocument implements Configuration {
 
     public Long getScanMillis() {
         return 0L;
-    }
-
-    public ElementNode getRootElement() {
-        return this.rootNode;
     }
 
     public boolean addWatcher(ConfigWatcher watcher) {

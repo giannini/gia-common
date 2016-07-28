@@ -2,6 +2,7 @@ package com.giannini.common.config;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -165,7 +166,6 @@ public class ElementNode
      * @return
      */
     public ElementNode getChild(String key) {
-
         if (this.children.isEmpty() || key == null) {
             return null;
         }
@@ -428,12 +428,83 @@ public class ElementNode
         }
 
         return Long.parseLong(node.value.toString());
-        // return Integer.parseInt(node.value.toString());
+    }
+
+    /**
+     * 获取属性值
+     * 
+     * @param name
+     *            属性名
+     * @return
+     */
+    public String getAttribute(String name) {
+        if (attributes == null) {
+            return null;
+        } else {
+            return attributes.get(name);
+        }
+    }
+
+    /**
+     * 获取属性值
+     * 
+     * @param name
+     * @param defaultValue
+     *            如果不存在返回默认值
+     * @return
+     */
+    public String getAttribute(String name, String defaultValue) {
+        if (attributes == null || !attributes.containsKey(name)) {
+            return defaultValue;
+        } else {
+            return attributes.get(name);
+        }
+    }
+
+    /**
+     * 获取属性映射
+     * 
+     * @return
+     */
+    public Map<String, String> attributes() {
+        return this.attributes;
+    }
+
+    /**
+     * 添加属性
+     * 
+     * @param key
+     * @param val
+     */
+    public void addAttributes(String key, String val) {
+        if (this.attributes == null) {
+            this.attributes = new HashMap<String, String>();
+        }
+        this.attributes.put(key, val);
+    }
+
+    /**
+     * 更新属性（清空当前已有属性）
+     * 
+     * @param attrs
+     */
+    public void setAttributes(Map<String, String> attrs) {
+        if (this.attributes != null) {
+            this.attributes.clear();
+        }
+        this.attributes.putAll(attrs);
+    }
+
+    public void clearAttributes() {
+        if (this.attributes != null) {
+            this.attributes.clear();
+        }
     }
 
     public Iterator<ElementNode> iterator() {
         return new InnerIterator();
     }
+
 
     public int compareTo(ElementNode arg0) {
         // TODO Auto-generated method stub

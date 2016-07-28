@@ -5,6 +5,16 @@ package com.giannini.common.config;
  *
  * @author giannini
  */
-public class PropertiesConfigDocument extends DefaultConfigDocument {
+public class PropertiesConfigDocument extends AbstractConfigDocument {
+
+    public ElementNode getRootElement() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public void load() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
 
 }

@@ -20,7 +20,7 @@ public interface Configuration {
     Long getScanMillis();
 
     /**
-     * 获取配置文档中的配置根节点
+     * 获取XML配置文档中的配置根节点
      * 
      * @return 配置根节点
      */
