@@ -7,6 +7,9 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+
+import com.giannini.common.codec.MD5Utils;
 
 /**
  * 对Element封装，支持多层级的xml解析 <br>
@@ -431,6 +434,60 @@ public class ElementNode
     }
 
     /**
+     * 强制以Double类型返回指定的配置参数值
+     * <p>
+     * 如果存在多个相关配置参数, 则选择第一个配置参数值
+     * <p>
+     * 参数路径可以是配置节点名称, 或者是采用'.'分隔的嵌套参数节点路径
+     * 
+     * @param key
+     *            配置参数名路径
+     * @return 参数值
+     * @throws NullPointerException
+     *             指定的配置参数不存在
+     * @throws ClassCastException
+     *             转换参数值类型失败
+     */
+    public Double getDoube(String key) {
+        ElementNode node = this.getChild(key);
+        if (node == null) {
+            throw new NullPointerException(key + " is null");
+        } else if (node.hasChildren()) {
+            throw new ClassCastException(key + " no value.");
+        }
+
+        if (node.value instanceof Double) {
+            return ((Double) node.value).doubleValue();
+        }
+
+        return Double.parseDouble(node.value.toString());
+    }
+
+    /**
+     * 根据参数路径返回Double类型的值，如果指定的节点不存在或者未设置值，则返回默认值
+     * 
+     * @param key
+     * @param defaultValue
+     * @return
+     */
+    public Double getDouble(String key, Double defaultValue) {
+        ElementNode node = this.getChild(key);
+        if (node == null) {
+            return defaultValue;
+        } else if (node.hasChildren()) {
+            throw new ClassCastException(key + " no value.");
+        } else if (node.value == null) {
+            return defaultValue;
+        }
+
+        if (node.value instanceof Long) {
+            return ((Double) node.value).doubleValue();
+        }
+
+        return Double.parseDouble(node.value.toString());
+    }
+
+    /**
      * 获取属性值
      * 
      * @param name
@@ -506,8 +563,98 @@ public class ElementNode
     }
 
 
-    public int compareTo(ElementNode arg0) {
-        // TODO Auto-generated method stub
+    @SuppressWarnings("unchecked")
+    public int compareTo(ElementNode other) {
+        if (other == null) {
+            return 1;
+        }
+
+        // compare name
+        if (other.name == null || !other.name.equals(this.name)) {
+            return 1;
+        }
+
+        // comapre val
+        if (this.value == null && other.value != null) {
+            return -1;
+        } else if (this.value != null && other.value == null) {
+            return 1;
+        } else if (this.value != null && other.value != null
+                && !this.value.equals(other.value)) {
+            return (this.value.hashCode() - other.value.hashCode());
+        }
+
+        // compare all attributes
+        int attrSize = this.attributes == null ? 0 : attributes.size();
+        int otherAttrSize = other.attributes == null ? 0
+                : other.attributes.size();
+        if (attrSize != otherAttrSize) {
+            return (attrSize - otherAttrSize);
+        } else {
+            // comapre attrs' md5_name & md5_value
+            String attrsNames = null, attrsValues = null;
+            for (Entry<String, String> attr: this.attributes.entrySet()) {
+                attrsNames += attr.getKey();
+                attrsValues += attr.getValue();
+            }
+            String otherAttrsNames = null, otherAttrsVaules = null;
+            for (Entry<String, String> attr: other.attributes.entrySet()) {
+                otherAttrsNames += attr.getKey();
+                otherAttrsVaules += attr.getValue();
+            }
+
+            int diff = (MD5Utils.getMD5(attrsValues).hashCode()
+                    - MD5Utils.getMD5(otherAttrsVaules).hashCode())
+                    + (MD5Utils.getMD5(attrsNames).hashCode()
+                            - MD5Utils.getMD5(otherAttrsNames).hashCode());
+            if (diff != 0) {
+                return diff;
+            }
+
+        }
+
+        // compare children size
+        if (this.children.size() != other.children.size()) {
+            return (children.size() - other.children.size());
+        }
+
+        // compare all children
+        for (Entry<String, Object> entry: this.children.entrySet()) {
+            Object child = entry.getValue();
+            Object otherChild = other.children.get(entry.getKey());
+            if (otherChild == null) {
+                return 1;
+            }
+
+            if (child instanceof ElementNode) {
+                if (otherChild instanceof List) {
+                    return -1;
+                } else {
+                    int diff = ((ElementNode) child)
+                            .compareTo((ElementNode) otherChild);
+                    if (diff != 0) {
+                        return 0;
+                    }
+                }
+            } else if (child instanceof List) {
+                List<ElementNode> childList = (List<ElementNode>) child;
+                List<ElementNode> otherChildList = (List<ElementNode>) otherChild;
+                
+                if (childList.size() != otherChildList.size()) {
+                    return (childList.size() - otherChildList.size());
+                } else {
+                    for (int i = 0; i < childList.size(); i++) {
+                        int diff = childList.get(i)
+                                .compareTo(otherChildList.get(i));
+                        if (diff != 0) {
+                            return diff;
+                        }
+                    }
+                }
+
+            }
+        }
+
         return 0;
     }
 
