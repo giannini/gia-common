@@ -7,8 +7,11 @@ package com.giannini.common.config;
  */
 public class PropertiesConfigDocument extends AbstractConfigDocument {
 
+    public PropertiesConfigDocument(String configFile) {
+        super(configFile);
+    }
+
     public ElementNode getRootElement() {
-        // TODO Auto-generated method stub
         return null;
     }
 

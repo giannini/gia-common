@@ -1,5 +1,6 @@
 package com.giannini.common.config;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,6 +27,11 @@ public abstract class AbstractConfigDocument implements Configuration {
     private String confHome = DEFAULT_CONF_HOME;
 
     /**
+     * 配置文件路径
+     */
+    protected String configFilePath = null;
+
+    /**
      * 配置的版本号
      */
     private volatile long version = System.currentTimeMillis();
@@ -35,6 +41,17 @@ public abstract class AbstractConfigDocument implements Configuration {
     public AbstractConfigDocument() {
         this.confHome = System.getProperty(PROPERTY_CONF_HOME,
                 DEFAULT_CONF_HOME);
+    }
+
+    public AbstractConfigDocument(String configFile) {
+        this();
+
+        File config = new File(configFile);
+        if (config.isAbsolute()) {
+            this.configFilePath = config.getAbsolutePath();
+        } else {
+            this.configFilePath = this.getConfHome() + "/" + configFile;
+        }
     }
 
     public long getVersion() {

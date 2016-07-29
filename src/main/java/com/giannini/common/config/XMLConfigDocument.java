@@ -16,26 +16,12 @@ import org.dom4j.io.SAXReader;
 public class XMLConfigDocument extends AbstractConfigDocument {
 
     /**
-     * XML配置文件路径
-     */
-    private String configFilePath = null;
-
-    /**
      * XML配置的根节点
      */
     private volatile ElementNode rootNode = null;
 
     public XMLConfigDocument(String configFilePath) {
-        super();
-
-        File config = new File(configFilePath);
-        if (config.isAbsolute()) {
-            this.configFilePath = config.getAbsolutePath();
-        } else {
-            this.configFilePath = this.getConfHome() + "/" + configFilePath;
-        }
-
-        // System.out.println(this.configFilePath);
+        super(configFilePath);
     }
 
     /**
