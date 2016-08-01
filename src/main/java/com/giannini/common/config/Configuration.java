@@ -20,13 +20,6 @@ public interface Configuration {
     Long getScanMillis();
 
     /**
-     * 获取配置文档中的配置根节点
-     * 
-     * @return 配置根节点
-     */
-    ElementNode getRootElement();
-
-    /**
      * 载入配置参数
      * <p>
      * 可以被重复调用, 每次载入成功时应该自动更新配置版本号
@@ -37,24 +30,10 @@ public interface Configuration {
     void load() throws Exception;
 
     /**
-     * 添加一个配置更新监控器
+     * 配置文件更新后，重新加载
      * 
-     * @param watcher
-     *            配置更新监控器实例
-     * @return true=添加成功; false=该监控器已添加
+     * @throws Exception
      */
-    boolean addWatcher(ConfigWatcher watcher);
+    void change() throws Exception;
 
-    /**
-     * 移除一个配置更新监控器
-     * 
-     * @param watcher
-     *            配置更新监控器实例
-     */
-    void removeWatcher(ConfigWatcher watcher);
-
-    /**
-     * 清除所有配置更新监控器
-     */
-    void clearWatcher();
 }

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 
+import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
@@ -26,6 +27,8 @@ public class Dom4jTest {
         // 获取根元素
         Element root = document.getRootElement();
         logger.info("Root: " + root.getName());
+        logger.info("{}:{}", root.getName(),
+                root.getData() == null ? "null" : root.getData());
 
         // 获取server元素
         Element server = root.element("server");
@@ -45,6 +48,10 @@ public class Dom4jTest {
                 "first test-el Attr: "
                         + firstWorldElement.attribute(0).getName()
                         + "=" + firstWorldElement.attributeValue("name"));
+        List<Attribute> attrs = firstWorldElement.attributes();
+        for (Attribute attr: attrs) {
+            logger.info("attr:{}--{}", attr.getName(), attr.getData());
+        }
 
         logger.info("迭代输出-----------------------");
         // 迭代输出
@@ -55,6 +62,7 @@ public class Dom4jTest {
 
         int threads = Integer
                 .valueOf(server.element("threads").getStringValue());
+        logger.info("threads:{}", server.element("threads").getData());
         logger.info("threads count: {}", threads);
 
     }

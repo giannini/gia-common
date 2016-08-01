@@ -22,6 +22,11 @@
 			<name>com.gianinni.test</name>
 			<config>127.0.0.1:/home/gia/test/test.xml</config>
 	    </volume>
-
+	    
+	    <mills>1234567890987654321</mills>
+	    
+	    <enable>true</enable>
+	    
+		<pi>3.1415926</pi>
 	</server>  
 </root>
