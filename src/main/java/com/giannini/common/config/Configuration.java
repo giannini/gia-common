@@ -37,24 +37,10 @@ public interface Configuration {
     void load() throws Exception;
 
     /**
-     * 添加一个配置更新监控器
+     * 配置文件更新后，重新加载
      * 
-     * @param watcher
-     *            配置更新监控器实例
-     * @return true=添加成功; false=该监控器已添加
+     * @throws Exception
      */
-    boolean addWatcher(ConfigWatcher watcher);
+    void change() throws Exception;
 
-    /**
-     * 移除一个配置更新监控器
-     * 
-     * @param watcher
-     *            配置更新监控器实例
-     */
-    void removeWatcher(ConfigWatcher watcher);
-
-    /**
-     * 清除所有配置更新监控器
-     */
-    void clearWatcher();
 }

@@ -1,8 +1,8 @@
 package com.giannini.common.config;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * 缺省配置文件类
@@ -36,7 +36,20 @@ public abstract class AbstractConfigDocument implements Configuration {
      */
     private volatile long version = System.currentTimeMillis();
 
-    private final Set<ConfigWatcher> watcherSet = new HashSet<ConfigWatcher>();
+    /**
+     * 配置文件自动更新器
+     */
+    private Timer timer = null;
+
+    /**
+     * 是否需要提供自动更新, 默认支持自动更新
+     */
+    private boolean needAutoUpdate = true;
+
+    /**
+     * 自动更新时间间隔（单位：毫秒），默认6小时检查一次
+     */
+    private Long updatePeriod = 6 * 60 * 60 * 1000L;
 
     public AbstractConfigDocument() {
         this.confHome = System.getProperty(PROPERTY_CONF_HOME,
@@ -54,30 +67,27 @@ public abstract class AbstractConfigDocument implements Configuration {
         }
     }
 
+    public AbstractConfigDocument(String configFile, boolean isUpdate) {
+        this(configFile);
+        this.needAutoUpdate = isUpdate;
+    }
+
+    public AbstractConfigDocument(String configFile, Long updateInterval) {
+        this(configFile);
+        if (!updateInterval.equals(Long.MAX_VALUE)) {
+            this.needAutoUpdate = true;
+        } else {
+            this.needAutoUpdate = false;
+        }
+        this.updatePeriod = updateInterval;
+    }
+
     public long getVersion() {
         return version;
     }
 
     public Long getScanMillis() {
-        return 0L;
-    }
-
-    public boolean addWatcher(ConfigWatcher watcher) {
-        synchronized (this.watcherSet) {
-            return this.watcherSet.add(watcher);
-        }
-    }
-
-    public void removeWatcher(ConfigWatcher watcher) {
-        synchronized (this.watcherSet) {
-            this.watcherSet.remove(watcher);
-        }
-    }
-
-    public void clearWatcher() {
-        synchronized (this.watcherSet) {
-            this.watcherSet.clear();
-        }
+        return Long.MAX_VALUE;
     }
 
     public String getConfHome() {
@@ -86,6 +96,61 @@ public abstract class AbstractConfigDocument implements Configuration {
 
     public void setConfHome(String confHome) {
         this.confHome = confHome;
+    }
+
+    public boolean isNeedAutoUpdate() {
+        return needAutoUpdate;
+    }
+
+    public void setNeedAutoUpdate(boolean needAutoUpdate) {
+        this.needAutoUpdate = needAutoUpdate;
+    }
+
+    public Long getUpdatePeriod() {
+        return updatePeriod;
+    }
+
+    public void setUpdatePeriod(Long updatePeriod) {
+        this.updatePeriod = updatePeriod;
+    }
+
+    public void change() throws Exception {
+        File config = new File(configFilePath);
+        if (this.version < config.lastModified()) {
+            synchronized (this) {
+                version = config.lastModified();
+                doLoad();
+            }
+        }
+    }
+
+    public abstract void doLoad() throws Exception;
+
+    public void load() throws Exception {
+        if (needAutoUpdate && this.timer == null) {
+            TimerTask task = new TimerTask() {
+
+                @Override
+                public void run() {
+                    File config = new File(configFilePath);
+                    long newTimeStamp = config.lastModified();
+                    if (newTimeStamp > version) {
+                        try {
+                            change();
+                            if (timer == null || !needAutoUpdate
+                                    || updatePeriod
+                                            .equals(Long.MAX_VALUE)) {
+                                this.cancel();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            };
+            this.timer = new Timer(true);
+            timer.scheduleAtFixedRate(task, updatePeriod, updatePeriod);
+        }
     }
 
 }

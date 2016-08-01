@@ -35,18 +35,9 @@ public class XMLConfigDocument extends AbstractConfigDocument {
     }
 
     public synchronized void load() throws Exception {
-        if (this.configFilePath == null && this.rootNode != null) {
-            return;
-        } else if (this.configFilePath == null && this.rootNode == null) {
-            throw new Exception("no config file.");
-        } else {
-            // 根据configFilePath加载，获得root node
-            SAXReader saxReader = new SAXReader();
-            Document document = saxReader.read(new File(configFilePath));
-            Element rootElem = document.getRootElement();
-            System.out.println(rootElem.getName());
-            this.rootNode = doLoadXMLElements(rootElem);
-        }
+        super.load();
+
+        doLoad();
     }
 
     @SuppressWarnings("unchecked")
@@ -82,6 +73,22 @@ public class XMLConfigDocument extends AbstractConfigDocument {
 
     public ElementNode getRootElement() {
         return this.rootNode;
+    }
+
+    @Override
+    public void doLoad() throws Exception {
+        if (this.configFilePath == null && this.rootNode != null) {
+            return;
+        } else if (this.configFilePath == null && this.rootNode == null) {
+            throw new Exception("no config file.");
+        } else {
+            // 根据configFilePath加载，获得root node
+            SAXReader saxReader = new SAXReader();
+            Document document = saxReader.read(new File(configFilePath));
+            Element rootElem = document.getRootElement();
+            System.out.println(rootElem.getName());
+            this.rootNode = doLoadXMLElements(rootElem);
+        }
     }
 
 }

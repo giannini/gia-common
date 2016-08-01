@@ -23,17 +23,8 @@ public class PropertiesConfigDocument extends AbstractConfigDocument {
     }
 
     public synchronized void load() throws Exception {
-        InputStream is = null;
-        try {
-            is = new FileInputStream(new File(this.configFilePath));
-            Properties p = new Properties();
-            p.load(is);
-            this.prop = p;
-        } finally {
-            if (is != null) {
-                is.close();
-            }
-        }
+        super.load();
+        doLoad();
     }
 
     /**
@@ -229,6 +220,21 @@ public class PropertiesConfigDocument extends AbstractConfigDocument {
         }
 
         return Double.parseDouble(value.toString());
+    }
+
+    @Override
+    public void doLoad() throws Exception {
+        InputStream is = null;
+        try {
+            is = new FileInputStream(new File(this.configFilePath));
+            Properties p = new Properties();
+            p.load(is);
+            this.prop = p;
+        } finally {
+            if (is != null) {
+                is.close();
+            }
+        }
     }
 
 }
