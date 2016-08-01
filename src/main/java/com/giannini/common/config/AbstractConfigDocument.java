@@ -124,7 +124,7 @@ public abstract class AbstractConfigDocument implements Configuration {
         }
     }
 
-    public abstract void doLoad() throws Exception;
+    protected abstract void doLoad() throws Exception;
 
     public void load() throws Exception {
         if (needAutoUpdate && this.timer == null) {

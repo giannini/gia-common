@@ -20,13 +20,6 @@ public interface Configuration {
     Long getScanMillis();
 
     /**
-     * 获取XML配置文档中的配置根节点
-     * 
-     * @return 配置根节点
-     */
-    ElementNode getRootElement();
-
-    /**
      * 载入配置参数
      * <p>
      * 可以被重复调用, 每次载入成功时应该自动更新配置版本号

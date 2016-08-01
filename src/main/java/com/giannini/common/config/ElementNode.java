@@ -488,6 +488,61 @@ public class ElementNode
     }
 
     /**
+     * 强制以String类型返回指定的配置参数值
+     * <p>
+     * 如果存在多个相关配置参数, 则选择第一个配置参数值
+     * <p>
+     * 参数路径可以是配置节点名称, 或者是采用'.'分隔的嵌套参数节点路径
+     * 
+     * @param key
+     *            配置参数名路径
+     * @return 参数值
+     * @throws NullPointerException
+     *             指定的配置参数不存在
+     * @throws ClassCastException
+     *             转换参数值类型失败
+     */
+    public String getString(String key) {
+        ElementNode node = this.getChild(key);
+        if (node == null) {
+            throw new NullPointerException(key + " is null");
+        } else if (node.hasChildren()) {
+            throw new ClassCastException(key + " no value.");
+        }
+
+        if (node.value instanceof String) {
+            return node.value.toString();
+        }
+
+        return String.valueOf(node.value);
+
+    }
+
+    /**
+     * 根据参数路径返回String类型的值，如果指定的节点不存在或者未设置值，则返回默认值
+     * 
+     * @param key
+     * @param defaultValue
+     * @return
+     */
+    public String getString(String key, String defaultValue) {
+        ElementNode node = this.getChild(key);
+        if (node == null) {
+            return defaultValue;
+        } else if (node.hasChildren()) {
+            throw new ClassCastException(key + " no value.");
+        } else if (node.value == null) {
+            return defaultValue;
+        }
+
+        if (node.value instanceof String) {
+            return node.value.toString();
+        }
+
+        return String.valueOf(node.value);
+    }
+
+    /**
      * 获取属性值
      * 
      * @param name

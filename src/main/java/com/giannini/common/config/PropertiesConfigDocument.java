@@ -18,8 +18,12 @@ public class PropertiesConfigDocument extends AbstractConfigDocument {
         super(configFile);
     }
 
-    public ElementNode getRootElement() {
-        return null;
+    public PropertiesConfigDocument(String configFile, boolean update) {
+        super(configFile, update);
+    }
+
+    public PropertiesConfigDocument(String configFile, long mills) {
+        super(configFile, mills);
     }
 
     public synchronized void load() throws Exception {
@@ -223,7 +227,7 @@ public class PropertiesConfigDocument extends AbstractConfigDocument {
     }
 
     @Override
-    public void doLoad() throws Exception {
+    protected void doLoad() throws Exception {
         InputStream is = null;
         try {
             is = new FileInputStream(new File(this.configFilePath));

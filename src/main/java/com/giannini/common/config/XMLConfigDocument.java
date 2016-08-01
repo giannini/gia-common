@@ -24,6 +24,14 @@ public class XMLConfigDocument extends AbstractConfigDocument {
         super(configFilePath);
     }
 
+    public XMLConfigDocument(String configFilePath, long mills) {
+        super(configFilePath, mills);
+    }
+
+    public XMLConfigDocument(String configFilePath, boolean update) {
+        super(configFilePath, update);
+    }
+
     /**
      * 根据xml的root节点来创建配置文件实例
      * 
@@ -36,7 +44,6 @@ public class XMLConfigDocument extends AbstractConfigDocument {
 
     public synchronized void load() throws Exception {
         super.load();
-
         doLoad();
     }
 
@@ -76,7 +83,7 @@ public class XMLConfigDocument extends AbstractConfigDocument {
     }
 
     @Override
-    public void doLoad() throws Exception {
+    protected void doLoad() throws Exception {
         if (this.configFilePath == null && this.rootNode != null) {
             return;
         } else if (this.configFilePath == null && this.rootNode == null) {
@@ -86,7 +93,6 @@ public class XMLConfigDocument extends AbstractConfigDocument {
             SAXReader saxReader = new SAXReader();
             Document document = saxReader.read(new File(configFilePath));
             Element rootElem = document.getRootElement();
-            System.out.println(rootElem.getName());
             this.rootNode = doLoadXMLElements(rootElem);
         }
     }

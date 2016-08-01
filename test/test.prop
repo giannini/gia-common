@@ -1,0 +1,5 @@
+class=com.giannini.config.XMLConfigDocument
+threads=32
+pi=3.1415926
+enable=true
+mills=1234567890098765
